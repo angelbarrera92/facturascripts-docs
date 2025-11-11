@@ -1,0 +1,776 @@
+{
+  "info": {
+    "name": "FacturaScripts API v3",
+    "description": "Complete collection for FacturaScripts REST API v3\n\nAuthentication: Token-based (header: Token)\n\nBase URL: http://192.168.113.1:8899/api/3",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "facturascripts"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "value",
+        "value": "{{token}}",
+        "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "Token",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://192.168.113.1:8899/api/3",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "YOUR_TOKEN",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Master Data",
+      "item": [
+        {
+          "name": "List Countries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pais",
+              "host": ["{{baseUrl}}"],
+              "path": ["pais"]
+            }
+          }
+        },
+        {
+          "name": "Get Country Schema",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pais/schema",
+              "host": ["{{baseUrl}}"],
+              "path": ["pais", "schema"]
+            }
+          }
+        },
+        {
+          "name": "List Provinces",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/provincias",
+              "host": ["{{baseUrl}}"],
+              "path": ["provincias"]
+            }
+          }
+        },
+        {
+          "name": "List Cities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ciudades",
+              "host": ["{{baseUrl}}"],
+              "path": ["ciudades"]
+            }
+          }
+        },
+        {
+          "name": "List Postal Codes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/codigopostales",
+              "host": ["{{baseUrl}}"],
+              "path": ["codigopostales"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customers & Suppliers",
+      "item": [
+        {
+          "name": "List Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer Schema",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/schema",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", "schema"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/:codcliente",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", ":codcliente"],
+              "variable": [
+                {
+                  "key": "codcliente",
+                  "value": "CLI001"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codcliente\": \"CLI001\",\n  \"nombre\": \"Juan Pérez\",\n  \"cifnif\": \"12345678A\",\n  \"email\": \"juan@example.com\",\n  \"telefono1\": \"600123456\",\n  \"personafisica\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes"]
+            }
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newemail@example.com\",\n  \"telefono1\": \"600999888\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/clientes/:codcliente",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", ":codcliente"],
+              "variable": [
+                {
+                  "key": "codcliente",
+                  "value": "CLI001"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/clientes/:codcliente",
+              "host": ["{{baseUrl}}"],
+              "path": ["clientes", ":codcliente"],
+              "variable": [
+                {
+                  "key": "codcliente",
+                  "value": "CLI001"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Suppliers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/proveedores",
+              "host": ["{{baseUrl}}"],
+              "path": ["proveedores"]
+            }
+          }
+        },
+        {
+          "name": "List Contacts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/contactos",
+              "host": ["{{baseUrl}}"],
+              "path": ["contactos"]
+            }
+          }
+        },
+        {
+          "name": "List Sales Agents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/agentes",
+              "host": ["{{baseUrl}}"],
+              "path": ["agentes"]
+            }
+          }
+        },
+        {
+          "name": "List Customer Groups",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/grupoclientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["grupoclientes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products & Inventory",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/productos",
+              "host": ["{{baseUrl}}"],
+              "path": ["productos"]
+            }
+          }
+        },
+        {
+          "name": "Get Product Schema",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/productos/schema",
+              "host": ["{{baseUrl}}"],
+              "path": ["productos", "schema"]
+            }
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"referencia\": \"PROD001\",\n  \"descripcion\": \"Example Product\",\n  \"precio\": 19.99,\n  \"sevende\": 1,\n  \"secompra\": 1,\n  \"codfamilia\": \"FAM01\",\n  \"stockfis\": 100\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/productos",
+              "host": ["{{baseUrl}}"],
+              "path": ["productos"]
+            }
+          }
+        },
+        {
+          "name": "List Product Families",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/familias",
+              "host": ["{{baseUrl}}"],
+              "path": ["familias"]
+            }
+          }
+        },
+        {
+          "name": "Get Family Schema",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/familias/schema",
+              "host": ["{{baseUrl}}"],
+              "path": ["familias", "schema"]
+            }
+          }
+        },
+        {
+          "name": "List Manufacturers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fabricantes",
+              "host": ["{{baseUrl}}"],
+              "path": ["fabricantes"]
+            }
+          }
+        },
+        {
+          "name": "List Warehouses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/almacenes",
+              "host": ["{{baseUrl}}"],
+              "path": ["almacenes"]
+            }
+          }
+        },
+        {
+          "name": "List Stock",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stocks",
+              "host": ["{{baseUrl}}"],
+              "path": ["stocks"]
+            }
+          }
+        },
+        {
+          "name": "List Variants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/variantes",
+              "host": ["{{baseUrl}}"],
+              "path": ["variantes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sales Documents",
+      "item": [
+        {
+          "name": "List Customer Invoices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/facturaclientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["facturaclientes"]
+            }
+          }
+        },
+        {
+          "name": "Get Invoice Schema",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/facturaclientes/schema",
+              "host": ["{{baseUrl}}"],
+              "path": ["facturaclientes", "schema"]
+            }
+          }
+        },
+        {
+          "name": "List Invoice Lines",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/lineafacturaclientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["lineafacturaclientes"]
+            }
+          }
+        },
+        {
+          "name": "List Delivery Notes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/albaranclientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["albaranclientes"]
+            }
+          }
+        },
+        {
+          "name": "List Customer Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pedidoclientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidoclientes"]
+            }
+          }
+        },
+        {
+          "name": "List Customer Quotations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/presupuestoclientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["presupuestoclientes"]
+            }
+          }
+        },
+        {
+          "name": "Create Customer Invoice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crearFacturaCliente",
+              "host": ["{{baseUrl}}"],
+              "path": ["crearFacturaCliente"]
+            }
+          }
+        },
+        {
+          "name": "Pay Customer Invoice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idfactura\": 123\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pagarFacturaCliente",
+              "host": ["{{baseUrl}}"],
+              "path": ["pagarFacturaCliente"]
+            }
+          }
+        },
+        {
+          "name": "List Customer Receipts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reciboclientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["reciboclientes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Purchase Documents",
+      "item": [
+        {
+          "name": "List Supplier Invoices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/facturaproveedores",
+              "host": ["{{baseUrl}}"],
+              "path": ["facturaproveedores"]
+            }
+          }
+        },
+        {
+          "name": "List Supplier Delivery Notes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/albaranproveedores",
+              "host": ["{{baseUrl}}"],
+              "path": ["albaranproveedores"]
+            }
+          }
+        },
+        {
+          "name": "List Supplier Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pedidoproveedores",
+              "host": ["{{baseUrl}}"],
+              "path": ["pedidoproveedores"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Accounting",
+      "item": [
+        {
+          "name": "List Accounting Entries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/asientos",
+              "host": ["{{baseUrl}}"],
+              "path": ["asientos"]
+            }
+          }
+        },
+        {
+          "name": "List Entry Lines",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/partidas",
+              "host": ["{{baseUrl}}"],
+              "path": ["partidas"]
+            }
+          }
+        },
+        {
+          "name": "List Accounts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cuentas",
+              "host": ["{{baseUrl}}"],
+              "path": ["cuentas"]
+            }
+          }
+        },
+        {
+          "name": "List Sub-accounts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/subcuentas",
+              "host": ["{{baseUrl}}"],
+              "path": ["subcuentas"]
+            }
+          }
+        },
+        {
+          "name": "List Fiscal Years",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ejercicios",
+              "host": ["{{baseUrl}}"],
+              "path": ["ejercicios"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Configuration",
+      "item": [
+        {
+          "name": "List Companies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/empresas",
+              "host": ["{{baseUrl}}"],
+              "path": ["empresas"]
+            }
+          }
+        },
+        {
+          "name": "List Payment Methods",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/formapagos",
+              "host": ["{{baseUrl}}"],
+              "path": ["formapagos"]
+            }
+          }
+        },
+        {
+          "name": "List Document Series",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/series",
+              "host": ["{{baseUrl}}"],
+              "path": ["series"]
+            }
+          }
+        },
+        {
+          "name": "List Taxes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/impuestos",
+              "host": ["{{baseUrl}}"],
+              "path": ["impuestos"]
+            }
+          }
+        },
+        {
+          "name": "List Currencies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/divisas",
+              "host": ["{{baseUrl}}"],
+              "path": ["divisas"]
+            }
+          }
+        },
+        {
+          "name": "List Bank Accounts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cuentabancos",
+              "host": ["{{baseUrl}}"],
+              "path": ["cuentabancos"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Administration",
+      "item": [
+        {
+          "name": "List Resources",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}",
+              "host": ["{{baseUrl}}"]
+            },
+            "description": "Get a list of all available API resources/endpoints"
+          }
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "List Roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/roles",
+              "host": ["{{baseUrl}}"],
+              "path": ["roles"]
+            }
+          }
+        },
+        {
+          "name": "List API Keys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/apikeyes",
+              "host": ["{{baseUrl}}"],
+              "path": ["apikeyes"]
+            }
+          }
+        },
+        {
+          "name": "List Settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/settings",
+              "host": ["{{baseUrl}}"],
+              "path": ["settings"]
+            }
+          }
+        },
+        {
+          "name": "List Log Messages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/logmessages",
+              "host": ["{{baseUrl}}"],
+              "path": ["logmessages"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

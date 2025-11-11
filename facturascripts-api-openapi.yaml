@@ -1,0 +1,1581 @@
+openapi: 3.0.3
+info:
+  title: FacturaScripts REST API
+  description: |
+    FacturaScripts REST API provides a simple way for developers to access, create, modify, and delete data from external applications.
+    
+    ## Authentication
+    All requests require a Token header with your API key.
+    
+    ## Documentation
+    For more information, visit: https://facturascripts.com/publicaciones/la-api-rest-de-facturascripts-912
+  version: "3.0"
+  contact:
+    name: FacturaScripts Support
+    url: https://facturascripts.com/contacto
+  license:
+    name: LGPL-3.0
+    url: https://www.gnu.org/licenses/lgpl-3.0.html
+
+servers:
+  - url: http://192.168.113.1:8899/api/3
+    description: Local Development Server
+  - url: http://localhost:8000/api/3
+    description: Local Installation
+
+security:
+  - TokenAuth: []
+
+tags:
+  - name: Master Data
+    description: Countries, cities, provinces, postal codes
+  - name: Customers & Suppliers
+    description: Customer and supplier management
+  - name: Products & Inventory
+    description: Product catalog and inventory management
+  - name: Sales Documents
+    description: Customer invoices, orders, quotations, delivery notes
+  - name: Purchase Documents
+    description: Supplier invoices, orders, quotations, delivery notes
+  - name: Accounting
+    description: Accounting entries, chart of accounts, fiscal years
+  - name: Configuration
+    description: System configuration and settings
+  - name: Administration
+    description: Users, roles, API keys, and system administration
+
+paths:
+  # Master Data
+  /pais:
+    get:
+      tags:
+        - Master Data
+      summary: List countries
+      description: Get a list of all countries
+      operationId: listCountries
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /pais/schema:
+    get:
+      tags:
+        - Master Data
+      summary: Get country schema
+      description: Get the database schema for countries
+      operationId: getCountrySchema
+      responses:
+        '200':
+          description: Schema information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchemaResponse'
+
+  /provincias:
+    get:
+      tags:
+        - Master Data
+      summary: List provinces
+      description: Get a list of all provinces/states
+      operationId: listProvinces
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /ciudades:
+    get:
+      tags:
+        - Master Data
+      summary: List cities
+      description: Get a list of all cities
+      operationId: listCities
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /codigopostales:
+    get:
+      tags:
+        - Master Data
+      summary: List postal codes
+      description: Get a list of all postal codes
+      operationId: listPostalCodes
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  # Customers & Suppliers
+  /clientes:
+    get:
+      tags:
+        - Customers & Suppliers
+      summary: List customers
+      description: Get a list of all customers
+      operationId: listCustomers
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+        - Customers & Suppliers
+      summary: Create customer
+      description: Create a new customer
+      operationId: createCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCreate'
+      responses:
+        '201':
+          description: Customer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /clientes/schema:
+    get:
+      tags:
+        - Customers & Suppliers
+      summary: Get customer schema
+      description: Get the database schema for customers
+      operationId: getCustomerSchema
+      responses:
+        '200':
+          description: Schema information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchemaResponse'
+
+  /clientes/{codcliente}:
+    get:
+      tags:
+        - Customers & Suppliers
+      summary: Get customer
+      description: Get a specific customer by code
+      operationId: getCustomer
+      parameters:
+        - name: codcliente
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Customer code
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Customers & Suppliers
+      summary: Update customer
+      description: Update an existing customer
+      operationId: updateCustomer
+      parameters:
+        - name: codcliente
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Customer code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerUpdate'
+      responses:
+        '200':
+          description: Customer updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Customers & Suppliers
+      summary: Delete customer
+      description: Delete a customer
+      operationId: deleteCustomer
+      parameters:
+        - name: codcliente
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Customer code
+      responses:
+        '200':
+          description: Customer deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /proveedores:
+    get:
+      tags:
+        - Customers & Suppliers
+      summary: List suppliers
+      description: Get a list of all suppliers
+      operationId: listSuppliers
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /contactos:
+    get:
+      tags:
+        - Customers & Suppliers
+      summary: List contacts
+      description: Get a list of all contacts
+      operationId: listContacts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /agentes:
+    get:
+      tags:
+        - Customers & Suppliers
+      summary: List agents
+      description: Get a list of all sales agents
+      operationId: listAgents
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  # Products & Inventory
+  /productos:
+    get:
+      tags:
+        - Products & Inventory
+      summary: List products
+      description: Get a list of all products
+      operationId: listProducts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+    post:
+      tags:
+        - Products & Inventory
+      summary: Create product
+      description: Create a new product
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreate'
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /productos/schema:
+    get:
+      tags:
+        - Products & Inventory
+      summary: Get product schema
+      description: Get the database schema for products
+      operationId: getProductSchema
+      responses:
+        '200':
+          description: Schema information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchemaResponse'
+
+  /productos/{idproducto}:
+    get:
+      tags:
+        - Products & Inventory
+      summary: Get product
+      description: Get a specific product by ID
+      operationId: getProduct
+      parameters:
+        - name: idproducto
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Product ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /familias:
+    get:
+      tags:
+        - Products & Inventory
+      summary: List product families
+      description: Get a list of all product families
+      operationId: listFamilies
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductFamily'
+    post:
+      tags:
+        - Products & Inventory
+      summary: Create product family
+      description: Create a new product family
+      operationId: createFamily
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductFamilyCreate'
+      responses:
+        '201':
+          description: Family created successfully
+
+  /familias/schema:
+    get:
+      tags:
+        - Products & Inventory
+      summary: Get family schema
+      description: Get the database schema for product families
+      operationId: getFamilySchema
+      responses:
+        '200':
+          description: Schema information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchemaResponse'
+
+  /fabricantes:
+    get:
+      tags:
+        - Products & Inventory
+      summary: List manufacturers
+      description: Get a list of all manufacturers
+      operationId: listManufacturers
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /almacenes:
+    get:
+      tags:
+        - Products & Inventory
+      summary: List warehouses
+      description: Get a list of all warehouses
+      operationId: listWarehouses
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /stocks:
+    get:
+      tags:
+        - Products & Inventory
+      summary: List stock
+      description: Get a list of all stock levels
+      operationId: listStock
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /variantes:
+    get:
+      tags:
+        - Products & Inventory
+      summary: List product variants
+      description: Get a list of all product variants
+      operationId: listVariants
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  # Sales Documents
+  /facturaclientes:
+    get:
+      tags:
+        - Sales Documents
+      summary: List customer invoices
+      description: Get a list of all customer invoices
+      operationId: listCustomerInvoices
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerInvoice'
+    post:
+      tags:
+        - Sales Documents
+      summary: Create customer invoice
+      description: Create a new customer invoice
+      operationId: createCustomerInvoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerInvoiceCreate'
+      responses:
+        '201':
+          description: Invoice created successfully
+
+  /facturaclientes/schema:
+    get:
+      tags:
+        - Sales Documents
+      summary: Get customer invoice schema
+      description: Get the database schema for customer invoices
+      operationId: getCustomerInvoiceSchema
+      responses:
+        '200':
+          description: Schema information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchemaResponse'
+
+  /lineafacturaclientes:
+    get:
+      tags:
+        - Sales Documents
+      summary: List customer invoice lines
+      description: Get a list of all customer invoice line items
+      operationId: listCustomerInvoiceLines
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /albaranclientes:
+    get:
+      tags:
+        - Sales Documents
+      summary: List customer delivery notes
+      description: Get a list of all customer delivery notes
+      operationId: listCustomerDeliveryNotes
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /pedidoclientes:
+    get:
+      tags:
+        - Sales Documents
+      summary: List customer orders
+      description: Get a list of all customer orders
+      operationId: listCustomerOrders
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /presupuestoclientes:
+    get:
+      tags:
+        - Sales Documents
+      summary: List customer quotations
+      description: Get a list of all customer quotations
+      operationId: listCustomerQuotations
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /reciboclientes:
+    get:
+      tags:
+        - Sales Documents
+      summary: List customer receipts
+      description: Get a list of all customer payment receipts
+      operationId: listCustomerReceipts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /crearFacturaCliente:
+    post:
+      tags:
+        - Sales Documents
+      summary: Create customer invoice
+      description: Create a new customer invoice with specific workflow
+      operationId: createCustomerInvoiceWorkflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Invoice created successfully
+
+  /pagarFacturaCliente:
+    post:
+      tags:
+        - Sales Documents
+      summary: Pay customer invoice
+      description: Mark a customer invoice as paid
+      operationId: payCustomerInvoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idfactura:
+                  type: integer
+                  description: Invoice ID
+      responses:
+        '200':
+          description: Invoice marked as paid
+
+  # Purchase Documents
+  /facturaproveedores:
+    get:
+      tags:
+        - Purchase Documents
+      summary: List supplier invoices
+      description: Get a list of all supplier invoices
+      operationId: listSupplierInvoices
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /albaranproveedores:
+    get:
+      tags:
+        - Purchase Documents
+      summary: List supplier delivery notes
+      description: Get a list of all supplier delivery notes
+      operationId: listSupplierDeliveryNotes
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /pedidoproveedores:
+    get:
+      tags:
+        - Purchase Documents
+      summary: List supplier orders
+      description: Get a list of all supplier orders
+      operationId: listSupplierOrders
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  # Accounting
+  /asientos:
+    get:
+      tags:
+        - Accounting
+      summary: List accounting entries
+      description: Get a list of all accounting journal entries
+      operationId: listAccountingEntries
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /partidas:
+    get:
+      tags:
+        - Accounting
+      summary: List entry lines
+      description: Get a list of all accounting entry line items
+      operationId: listEntryLines
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /cuentas:
+    get:
+      tags:
+        - Accounting
+      summary: List accounts
+      description: Get a list of all chart of accounts
+      operationId: listAccounts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /subcuentas:
+    get:
+      tags:
+        - Accounting
+      summary: List sub-accounts
+      description: Get a list of all sub-accounts
+      operationId: listSubAccounts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /ejercicios:
+    get:
+      tags:
+        - Accounting
+      summary: List fiscal years
+      description: Get a list of all fiscal years
+      operationId: listFiscalYears
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  # Configuration
+  /empresas:
+    get:
+      tags:
+        - Configuration
+      summary: List companies
+      description: Get a list of all companies
+      operationId: listCompanies
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+              example:
+                - idempresa: 1
+                  nombre: "GAÑAN VENTURA NATALIA"
+                  nombrecorto: "GAÑAN VENTURA NATALIA"
+                  cifnif: "49066321F"
+                  tipoidfiscal: "DNI"
+                  personafisica: true
+                  direccion: "Calle Giganta Andandona 3, Portal 3, 1ºC"
+                  ciudad: "Getafe"
+                  provincia: "Madrid"
+                  codpostal: "28906"
+                  codpais: "ESP"
+                  telefono1: "627153667"
+                  email: "natalia@cafeelgato.com"
+                  regimeniva: "General"
+
+  /formapagos:
+    get:
+      tags:
+        - Configuration
+      summary: List payment methods
+      description: Get a list of all payment methods
+      operationId: listPaymentMethods
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /series:
+    get:
+      tags:
+        - Configuration
+      summary: List document series
+      description: Get a list of all document series
+      operationId: listSeries
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /impuestos:
+    get:
+      tags:
+        - Configuration
+      summary: List taxes
+      description: Get a list of all tax rates
+      operationId: listTaxes
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /divisas:
+    get:
+      tags:
+        - Configuration
+      summary: List currencies
+      description: Get a list of all currencies
+      operationId: listCurrencies
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /cuentabancos:
+    get:
+      tags:
+        - Configuration
+      summary: List bank accounts
+      description: Get a list of all company bank accounts
+      operationId: listBankAccounts
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  # Administration
+  /users:
+    get:
+      tags:
+        - Administration
+      summary: List users
+      description: Get a list of all system users
+      operationId: listUsers
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /roles:
+    get:
+      tags:
+        - Administration
+      summary: List roles
+      description: Get a list of all user roles
+      operationId: listRoles
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /apikeyes:
+    get:
+      tags:
+        - Administration
+      summary: List API keys
+      description: Get a list of all API keys
+      operationId: listApiKeys
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /settings:
+    get:
+      tags:
+        - Administration
+      summary: List settings
+      description: Get a list of all system settings
+      operationId: listSettings
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+  /logmessages:
+    get:
+      tags:
+        - Administration
+      summary: List log messages
+      description: Get a list of all system log messages
+      operationId: listLogMessages
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+
+components:
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      in: header
+      name: Token
+      description: API authentication token
+
+  schemas:
+    Country:
+      type: object
+      properties:
+        codpais:
+          type: string
+          maxLength: 20
+          description: Country code
+        nombre:
+          type: string
+          description: Country name
+
+    Customer:
+      type: object
+      required:
+        - codcliente
+        - nombre
+        - cifnif
+      properties:
+        codcliente:
+          type: string
+          maxLength: 10
+          description: Customer code (unique identifier)
+        nombre:
+          type: string
+          maxLength: 100
+          description: Customer name
+        cifnif:
+          type: string
+          maxLength: 30
+          description: Tax identification number
+        razonsocial:
+          type: string
+          maxLength: 100
+          description: Business/Legal name
+        personafisica:
+          type: boolean
+          description: Is individual person (true) or company (false)
+        email:
+          type: string
+          maxLength: 100
+          format: email
+          description: Email address
+        telefono1:
+          type: string
+          maxLength: 30
+          description: Primary phone number
+        telefono2:
+          type: string
+          maxLength: 30
+          description: Secondary phone number
+        codagente:
+          type: string
+          maxLength: 10
+          description: Assigned sales agent code
+        codgrupo:
+          type: string
+          maxLength: 6
+          description: Customer group code
+        codpago:
+          type: string
+          maxLength: 10
+          description: Default payment method
+        codserie:
+          type: string
+          maxLength: 4
+          description: Default document series
+        regimeniva:
+          type: string
+          maxLength: 20
+          description: VAT regime
+        riesgomax:
+          type: number
+          format: double
+          description: Maximum credit limit
+        riesgoalcanzado:
+          type: number
+          format: double
+          description: Current credit used
+        fechaalta:
+          type: string
+          format: date
+          description: Registration date
+        debaja:
+          type: boolean
+          description: Is inactive/deleted
+        observaciones:
+          type: string
+          description: Additional notes
+
+    CustomerCreate:
+      type: object
+      required:
+        - codcliente
+        - nombre
+        - cifnif
+      properties:
+        codcliente:
+          type: string
+          maxLength: 10
+        nombre:
+          type: string
+          maxLength: 100
+        cifnif:
+          type: string
+          maxLength: 30
+        email:
+          type: string
+          maxLength: 100
+          format: email
+        telefono1:
+          type: string
+          maxLength: 30
+        telefono2:
+          type: string
+          maxLength: 30
+        personafisica:
+          type: boolean
+          default: true
+
+    CustomerUpdate:
+      type: object
+      properties:
+        nombre:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          maxLength: 100
+          format: email
+        telefono1:
+          type: string
+          maxLength: 30
+        observaciones:
+          type: string
+
+    Product:
+      type: object
+      required:
+        - referencia
+      properties:
+        idproducto:
+          type: integer
+          description: Product ID (auto-increment)
+        referencia:
+          type: string
+          maxLength: 30
+          description: Product reference/SKU
+        descripcion:
+          type: string
+          description: Product description
+        precio:
+          type: number
+          format: double
+          description: Base price
+        codfamilia:
+          type: string
+          maxLength: 8
+          description: Product family code
+        codfabricante:
+          type: string
+          maxLength: 8
+          description: Manufacturer code
+        codimpuesto:
+          type: string
+          maxLength: 10
+          description: Tax code
+        stockfis:
+          type: number
+          format: double
+          description: Physical stock quantity
+        nostock:
+          type: boolean
+          description: Product doesn't use stock control
+        secompra:
+          type: boolean
+          description: Can be purchased
+        sevende:
+          type: boolean
+          description: Can be sold
+        publico:
+          type: boolean
+          description: Is public/visible
+        bloqueado:
+          type: boolean
+          description: Is blocked
+        observaciones:
+          type: string
+          description: Additional notes
+        fechaalta:
+          type: string
+          format: date
+          description: Creation date
+
+    ProductCreate:
+      type: object
+      required:
+        - referencia
+      properties:
+        referencia:
+          type: string
+          maxLength: 30
+        descripcion:
+          type: string
+        precio:
+          type: number
+          format: double
+        codfamilia:
+          type: string
+          maxLength: 8
+        sevende:
+          type: boolean
+          default: true
+        secompra:
+          type: boolean
+          default: true
+
+    ProductFamily:
+      type: object
+      required:
+        - codfamilia
+        - descripcion
+      properties:
+        codfamilia:
+          type: string
+          maxLength: 8
+          description: Family code
+        descripcion:
+          type: string
+          maxLength: 100
+          description: Family description
+        madre:
+          type: string
+          maxLength: 8
+          description: Parent family code
+        codsubcuentacom:
+          type: string
+          maxLength: 15
+          description: Purchase sub-account
+        codsubcuentaven:
+          type: string
+          maxLength: 15
+          description: Sales sub-account
+        codsubcuentairpfcom:
+          type: string
+          maxLength: 15
+          description: IRPF purchase sub-account
+
+    ProductFamilyCreate:
+      type: object
+      required:
+        - codfamilia
+        - descripcion
+      properties:
+        codfamilia:
+          type: string
+          maxLength: 8
+        descripcion:
+          type: string
+          maxLength: 100
+        madre:
+          type: string
+          maxLength: 8
+
+    CustomerInvoice:
+      type: object
+      required:
+        - codigo
+        - numero
+        - codserie
+        - codejercicio
+        - fecha
+        - nombrecliente
+        - cifnif
+        - codpago
+        - coddivisa
+      properties:
+        idfactura:
+          type: integer
+          description: Invoice ID (auto-increment)
+        codigo:
+          type: string
+          maxLength: 20
+          description: Invoice code
+        numero:
+          type: string
+          maxLength: 12
+          description: Invoice number
+        codserie:
+          type: string
+          maxLength: 4
+          description: Series code
+        codejercicio:
+          type: string
+          maxLength: 4
+          description: Fiscal year code
+        fecha:
+          type: string
+          format: date
+          description: Invoice date
+        codcliente:
+          type: string
+          maxLength: 10
+          description: Customer code
+        nombrecliente:
+          type: string
+          maxLength: 100
+          description: Customer name
+        cifnif:
+          type: string
+          maxLength: 30
+          description: Customer tax ID
+        direccion:
+          type: string
+          maxLength: 200
+          description: Customer address
+        ciudad:
+          type: string
+          maxLength: 100
+          description: City
+        provincia:
+          type: string
+          maxLength: 100
+          description: Province
+        codpostal:
+          type: string
+          maxLength: 10
+          description: Postal code
+        codpais:
+          type: string
+          maxLength: 20
+          description: Country code
+        codalmacen:
+          type: string
+          maxLength: 4
+          description: Warehouse code
+        codpago:
+          type: string
+          maxLength: 10
+          description: Payment method
+        coddivisa:
+          type: string
+          maxLength: 3
+          description: Currency code
+        tasaconv:
+          type: number
+          format: double
+          description: Exchange rate
+        codagente:
+          type: string
+          maxLength: 10
+          description: Sales agent code
+        neto:
+          type: number
+          format: double
+          description: Net amount (before taxes)
+        totaliva:
+          type: number
+          format: double
+          description: Total VAT amount
+        totalirpf:
+          type: number
+          format: double
+          description: Total IRPF withholding amount
+        totalrecargo:
+          type: number
+          format: double
+          description: Total surcharge amount
+        total:
+          type: number
+          format: double
+          description: Total invoice amount
+        pagada:
+          type: boolean
+          description: Is invoice paid
+        vencida:
+          type: boolean
+          description: Is invoice overdue
+        observaciones:
+          type: string
+          description: Additional notes
+
+    CustomerInvoiceCreate:
+      type: object
+      required:
+        - codigo
+        - codserie
+        - codejercicio
+        - fecha
+        - nombrecliente
+        - cifnif
+        - codpago
+        - coddivisa
+      properties:
+        codigo:
+          type: string
+          maxLength: 20
+        codserie:
+          type: string
+          maxLength: 4
+        codejercicio:
+          type: string
+          maxLength: 4
+        fecha:
+          type: string
+          format: date
+        codcliente:
+          type: string
+          maxLength: 10
+        nombrecliente:
+          type: string
+          maxLength: 100
+        cifnif:
+          type: string
+          maxLength: 30
+        codpago:
+          type: string
+          maxLength: 10
+        coddivisa:
+          type: string
+          maxLength: 3
+
+    Company:
+      type: object
+      properties:
+        idempresa:
+          type: integer
+          description: Company ID
+        nombre:
+          type: string
+          maxLength: 100
+          description: Company name
+        nombrecorto:
+          type: string
+          maxLength: 100
+          description: Short company name
+        cifnif:
+          type: string
+          maxLength: 30
+          description: Tax ID
+        tipoidfiscal:
+          type: string
+          maxLength: 25
+          description: Fiscal ID type
+        personafisica:
+          type: boolean
+          description: Is individual person
+        direccion:
+          type: string
+          maxLength: 200
+          description: Company address
+        ciudad:
+          type: string
+          maxLength: 100
+          description: City
+        provincia:
+          type: string
+          maxLength: 100
+          description: Province
+        codpostal:
+          type: string
+          maxLength: 10
+          description: Postal code
+        codpais:
+          type: string
+          maxLength: 20
+          description: Country code
+        telefono1:
+          type: string
+          maxLength: 30
+          description: Primary phone
+        telefono2:
+          type: string
+          maxLength: 30
+          description: Secondary phone
+        email:
+          type: string
+          maxLength: 100
+          format: email
+          description: Email address
+        web:
+          type: string
+          description: Website URL
+        regimeniva:
+          type: string
+          maxLength: 20
+          description: VAT regime
+
+    SchemaResponse:
+      type: object
+      additionalProperties:
+        type: object
+        properties:
+          type:
+            type: string
+            description: Database column type
+          default:
+            description: Default value
+          is_nullable:
+            type: string
+            enum: [YES, NO]
+            description: Whether field can be null
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Human-readable error message
+
+  responses:
+    Unauthorized:
+      description: Unauthorized - Missing or invalid API token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "UNAUTHORIZED"
+            message: "Invalid or missing Token header"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "NOT_FOUND"
+            message: "The requested resource was not found"
+
+    BadRequest:
+      description: Bad request - Invalid parameters or body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "BAD_REQUEST"
+            message: "Invalid request parameters"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "INTERNAL_ERROR"
+            message: "An unexpected error occurred"
